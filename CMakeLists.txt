@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.12)
 
+project(cmake_template)
 option(BUILD_SHARED_LIBS "Enable compilation of shared libraries" OFF)
+option(BUILD_TESTS "Enable compilation of tests" ON)
 
 add_library(project_warnings INTERFACE)
 
@@ -49,3 +51,13 @@ set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/cmake/mo
 include(addNewLibraryTarget)
 add_subdirectory(library)
 add_subdirectory(main)
+
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTS)
+    add_subdirectory("extern/googletest")
+
+    mark_as_advanced(
+        BUILD_GMOCK BUILD_GTEST BUILD_SHARED_LIBS
+        gmock_build_tests gtest_build_samples gtest_build_tests
+        gtest_disable_pthreads gtest_force_shared_crt gtest_hide_internal_symbols
+    )
+endif()
